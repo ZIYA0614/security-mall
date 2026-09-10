@@ -1,53 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>자유 게시판 - 보안 실습 쇼핑몰</title>
+    <meta charset="UTF-8"><title>게시판</title>
     <style>
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #3D2314; padding-bottom: 10px; }
-        .board-title { font-size: 24px; font-weight: 800; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        body { font-family: sans-serif; background-color: #FFFFFF; color: #3D2314; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #EAE3D9; padding: 12px; text-align: center; }
-        th { background-color: #F8F5F0; font-size: 15px; }
-        tr:nth-child(even) { background-color: #FAF8F5; }
-        .btn-write { background-color: #3D2314; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; }
+        th { background-color: #F8F5F0; }
+        .title-link { text-decoration: none; color: #3D2314; font-weight: bold; }
+        .title-link:hover { text-decoration: underline; }
+        button { background: #3D2314; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-danger { background: #A33B20; }
     </style>
 </head>
 <body>
-
-<!-- ⬇️ 한 줄로 공통 상단 영역 불러오기 ⬇️ -->
-<div th:replace="~{header :: headerFragment}"></div>
-
 <div class="container">
-    <div class="board-header">
-        <div class="board-title">📌 자유 게시판</div>
-        <a href="/board/write" class="btn-write" th:if="${loginUser != null}">글쓰기</a>
+    <h2>📌 자유 게시판</h2>
+    <a href="/" style="color: #3D2314;"><b>[쇼핑몰 메인으로 돌아가기]</b></a>
+    <hr>
+
+    <div th:if="${loginUser != null}" style="background: #FDFBF7; padding: 20px; border: 1px solid #EAE3D9; border-radius: 8px; margin-bottom: 20px;">
+        <h3>새 글 작성</h3>
+        <form action="/board/write" method="post">
+            제목: <input type="text" name="title" required style="width: 80%; padding: 6px;"><br><br>
+            내용: <textarea name="content" required style="width: 80%; height: 70px; padding: 6px;"></textarea><br><br>
+            <button type="submit">게시글 등록</button>
+        </form>
     </div>
 
     <table>
         <thead>
         <tr>
-            <th style="width: 80px;">글 번호</th>
-            <th>제목</th>
-            <th style="width: 120px;">글쓴이</th>
-            <th style="width: 180px;">날짜</th>
-            <th style="width: 80px;">VIEW</th>
+            <th style="width: 8%;">글 번호</th>
+            <th style="width: 40%;">제목</th>
+            <th style="width: 15%;">글쓴이</th>
+            <th style="width: 18%;">날짜</th>
+            <th style="width: 9%;">VIEW</th>
+            <th style="width: 10%;">관리</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="board : ${boards}">
-            <td th:text="${board.id}"></td>
-            <td style="text-align: left; padding-left: 20px;">
-                <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}" style="color: #3D2314; text-decoration: none; font-weight: 700;"></a>
+        <tr th:each="b : ${boards}">
+            <td th:text="${b.id}"></td>
+            <td style="text-align: left; padding-left: 15px;">
+                <a th:href="@{/board/{id}(id=${b.id})}" class="title-link" th:text="${b.title}"></a>
             </td>
-            <td th:text="${board.writer}"></td>
-            <td th:text="${board.createdDate}"></td>
-            <td th:text="${board.views}"></td>
+            <td th:text="${b.writer}"></td>
+            <td th:text="${b.formattedDate}"></td>
+            <td th:text="${b.views}"></td>
+            <td>
+                <a th:if="${loginUser != null && loginUser.username == b.writerUsername}" th:href="@{/board/edit/{id}(id=${b.id})}">
+                    <button type="button">수정</button>
+                </a>
+                <form th:if="${loginUser != null && (loginUser.username == b.writerUsername || loginUser.role == 'ADMIN')}"
+                      th:action="@{/board/delete/{id}(id=${b.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
-
 </body>
 </html>
