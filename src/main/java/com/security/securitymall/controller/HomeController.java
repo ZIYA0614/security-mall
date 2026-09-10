@@ -306,6 +306,7 @@ public class HomeController {
         if (loginUser != null) {
             board.setWriter(loginUser.getName());
             board.setWriterUsername(loginUser.getUsername());
+            board.setRegDate(java.time.LocalDateTime.now()); // 작성일시 세팅
             boardRepository.save(board);
         }
         return "redirect:/board";
