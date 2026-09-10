@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유 게시판 - 보안 실습 쇼핑몰</title>
+    <style>
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #3D2314; padding-bottom: 10px; }
+        .board-title { font-size: 24px; font-weight: 800; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #EAE3D9; padding: 12px; text-align: center; }
+        th { background-color: #F8F5F0; font-size: 15px; }
+        tr:nth-child(even) { background-color: #FAF8F5; }
+        .btn-write { background-color: #3D2314; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<!-- ⬇️ 한 줄로 공통 상단 영역 불러오기 ⬇️ -->
+<div th:replace="~{header :: headerFragment}"></div>
+
+<div class="container">
+    <div class="board-header">
+        <div class="board-title">📌 자유 게시판</div>
+        <a href="/board/write" class="btn-write" th:if="${loginUser != null}">글쓰기</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 80px;">글 번호</th>
+            <th>제목</th>
+            <th style="width: 120px;">글쓴이</th>
+            <th style="width: 180px;">날짜</th>
+            <th style="width: 80px;">VIEW</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${boards}">
+            <td th:text="${board.id}"></td>
+            <td style="text-align: left; padding-left: 20px;">
+                <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}" style="color: #3D2314; text-decoration: none; font-weight: 700;"></a>
+            </td>
+            <td th:text="${board.writer}"></td>
+            <td th:text="${board.createdDate}"></td>
+            <td th:text="${board.views}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

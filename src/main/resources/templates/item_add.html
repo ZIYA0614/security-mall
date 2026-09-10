@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <style>
+        body { font-family: sans-serif; background-color: #FFFFFF; color: #3D2314; padding: 40px; }
+        .form-card { max-width: 500px; margin: 0 auto; padding: 30px; border: 1px solid #EAE3D9; border-radius: 12px; background-color: #FDFBF7; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0 16px 0; box-sizing: border-box; border: 1px solid #C4B5A5; border-radius: 6px; }
+        button { background-color: #3D2314; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="form-card">
+    <h2>📦 새 상품 등록</h2>
+    <form action="/admin/item/add" method="post" enctype="multipart/form-data">
+        <label><b>상품명:</b></label>
+        <input type="text" name="name" required placeholder="예: 무선 마우스">
+
+        <label><b>카테고리 (기존 목록 선택 또는 새 카테고리 직접 입력):</b></label>
+        <input type="text" name="category" list="category-list" placeholder="새 카테고리 이름 입력 또는 선택" required>
+        <datalist id="category-list">
+            <option th:each="cat : ${categories}" th:value="${cat}"></option>
+        </datalist>
+
+        <label><b>가격 (원):</b></label>
+        <input type="number" name="price" required placeholder="예: 25000">
+
+        <label><b>재고 수량:</b></label>
+        <input type="number" name="stock" required placeholder="예: 10">
+
+        <label><b>상품 이미지:</b></label>
+        <input type="file" name="imageFile" accept="image/*">
+
+        <label><b>상품 설명:</b></label>
+        <textarea name="description" rows="4" placeholder="상품에 대한 설명을 입력하세요."></textarea>
+
+        <button type="submit">상품 등록하기</button>
+    </form>
+    <br>
+    <a href="/admin" style="color: #3D2314; text-decoration: none;"><b>← 관리자 페이지로 돌아가기</b></a>
+</div>
+</body>
+</html>

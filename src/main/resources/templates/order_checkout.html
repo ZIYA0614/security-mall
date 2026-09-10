@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문서 작성 및 결제</title>
+    <style>
+        body { font-family: sans-serif; background-color: #FFFFFF; color: #3D2314; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .box { background-color: #FDFBF7; border: 1px solid #EAE3D9; padding: 25px; border-radius: 8px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #EAE3D9; padding: 10px; text-align: center; }
+        th { background-color: #F8F5F0; }
+        input { width: 100%; padding: 10px; margin: 6px 0 16px 0; box-sizing: border-box; border: 1px solid #C4B5A5; border-radius: 4px; }
+        .btn-pay { background-color: #FEE500; color: #191919; border: none; padding: 16px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📝 주문 정보 확인 및 결제</h2>
+    <a href="/cart" style="color: #3D2314; font-weight: bold;">[← 장바구니로 돌아가기]</a>
+
+    <div class="box">
+        <h3>🛒 주문 상품</h3>
+        <table>
+            <tr><th>상품명</th><th>수량</th><th>금액</th></tr>
+            <tr th:each="c : ${cart}">
+                <td th:text="${c.item.name}"></td>
+                <td th:text="${c.quantity} + '개'"></td>
+                <td th:text="${#numbers.formatInteger(c.item.price * c.quantity, 0, 'COMMA')} + '원'"></td>
+            </tr>
+        </table>
+        <h3 style="text-align: right; color: #8C5A3C; margin-top: 15px;">
+            총 결제 금액: <span id="totalPrice" th:text="${totalPrice}">0</span> 원
+        </h3>
+    </div>
+
+    <div class="box">
+        <h3>🚚 배송지 및 주문자 정보</h3>
+        <form id="payForm">
+            <label><b>수령인 이름:</b></label>
+            <input type="text" id="buyerName" th:value="${loginUser != null ? loginUser.name : ''}" required>
+
+            <label><b>전화번호:</b></label>
+            <input type="text" id="buyerPhone" th:value="${loginUser != null ? loginUser.phone : ''}" required>
+
+            <label><b>배송 주소:</b></label>
+            <input type="text" id="buyerAddr" th:value="${loginUser != null ? loginUser.address : ''}" required>
+
+            <button type="button" class="btn-pay" onclick="requestKakaoPay()">🟡 카카오페이 테스트 결제하기</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function requestKakaoPay() {
+        var name = document.getElementById("buyerName").value;
+        var phone = document.getElementById("buyerPhone").value;
+        var addr = document.getElementById("buyerAddr").value;
+        var total = parseInt(document.getElementById("totalPrice").innerText);
+
+        if (!name || !phone || !addr) {
+            alert("배송 정보를 모두 입력해주세요.");
+            return;
+        }
+
+        // 카카오페이 테스트 결제 준비 API 호출
+        fetch('/order/kakaopay/ready', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                buyerName: name,
+                buyerPhone: phone,
+                buyerAddr: addr,
+                totalPrice: total
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // 카카오페이 테스트 결제 모의 화면으로 이동
+                    location.href = data.next_redirect_pc_url;
+                } else {
+                    alert("카카오페이 결제 준비 실패: " + data.message);
+                }
+            });
+    }
+</script>
+</body>
+</html>

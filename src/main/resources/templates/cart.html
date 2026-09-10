@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니 - 보안 실습 쇼핑몰</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background-color: #FFFFFF; color: #3D2314; margin: 0; padding: 0; font-weight: 600; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #EAE3D9; padding: 12px; text-align: center; }
+        th { background-color: #F8F5F0; }
+        .btn-checkout { background-color: #3D2314; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<!-- 공통 상단 영역 불러오기 -->
+<div th:replace="~{header :: headerFragment}"></div>
+
+<div class="container">
+    <h2>🛒 장바구니</h2>
+    <table th:if="${cart != null and !cart.isEmpty()}">
+        <thead>
+        <tr>
+            <th>상품명</th>
+            <th>수량</th>
+            <th>가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${cart}">
+            <td th:text="${c.item.name}"></td>
+            <td th:text="${c.quantity} + '개'"></td>
+            <td th:text="${#numbers.formatInteger(c.item.price * c.quantity, 0, 'COMMA')} + '원'"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${cart == null or cart.isEmpty()}" style="text-align: center; margin: 50px 0;">
+        장바구니가 비어 있습니다.
+    </div>
+    <div th:if="${cart != null and !cart.isEmpty()}" style="text-align: right; margin-top: 20px;">
+        <h3>총 금액: <span th:text="${#numbers.formatInteger(totalPrice, 0, 'COMMA')}"></span>원</h3>
+        <a href="/order/checkout" class="btn-checkout">주문하기</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${item != null ? item.name : '상품 상세'}">상품 상세</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background-color: #FFFFFF; color: #3D2314; margin: 0; padding: 0; font-weight: 600; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; gap: 40px; }
+        .detail-img { width: 400px; height: 350px; object-fit: cover; border-radius: 8px; border: 1px solid #EFEFEF; }
+        .detail-info { flex: 1; }
+        .btn-add-cart { background-color: #3D2314; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<!-- 공통 상단 영역 불러오기 -->
+<div th:replace="~{header :: headerFragment}"></div>
+
+<div class="container" th:if="${item != null}">
+    <img th:src="${item.imageUrl != null ? item.imageUrl : 'https://via.placeholder.com/400'}" class="detail-img">
+    <div class="detail-info">
+        <h1 th:text="${item.name}"></h1>
+        <h2 style="color: #8C5A3C;" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')} + '원'"></h2>
+        <p th:text="${item.description}"></p>
+        <form action="/cart/add" method="post">
+            <input type="hidden" name="itemId" th:value="${item.id}">
+            <label>수량: <input type="number" name="quantity" value="1" min="1" style="width: 60px; padding: 5px;"></label><br>
+            <button type="submit" class="btn-add-cart">장바구니 담기</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

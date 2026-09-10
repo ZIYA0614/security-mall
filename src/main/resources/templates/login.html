@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"><title>로그인</title>
+    <style>
+        body { font-family: sans-serif; background-color: #FFFFFF; color: #3D2314; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { text-align: center; border: 1px solid #EAE3D9; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 300px; }
+        input { width: 100%; padding: 8px; margin: 8px 0 15px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #3D2314; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>로그인</h2>
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="아이디"><br>
+        <input type="password" name="password" placeholder="비밀번호"><br>
+        <button type="submit">로그인</button>
+    </form>
+    <br>
+    <a href="/signup" style="color:#3D2314;">회원가입</a> | <a href="/" style="color:#3D2314;">홈으로</a>
+</div>
+</body>
+</html>

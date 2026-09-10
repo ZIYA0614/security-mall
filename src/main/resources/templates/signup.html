@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"><title>회원가입</title>
+    <style>
+        body { font-family: sans-serif; background-color: #FFFFFF; color: #3D2314; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { text-align: center; border: 1px solid #EAE3D9; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 340px; }
+        input { width: 100%; padding: 10px; margin: 6px 0 12px 0; box-sizing: border-box; border: 1px solid #C4B5A5; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #3D2314; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>회원가입</h2>
+    <form action="/signup" method="post">
+        <input type="text" name="username" placeholder="아이디" required><br>
+        <input type="password" name="password" placeholder="비밀번호" required><br>
+        <input type="text" name="name" placeholder="이름" required><br>
+        <input type="text" name="phone" placeholder="전화번호 (010-0000-0000)" required><br>
+        <input type="text" name="address" placeholder="주소" required><br>
+        <button type="submit">가입완료</button>
+    </form>
+    <br>
+    <a href="/login" style="color:#3D2314;">로그인 하러가기</a>
+</div>
+</body>
+</html>
